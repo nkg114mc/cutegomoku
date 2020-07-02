@@ -1,0 +1,19 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+	<file>Go_b_trn.svg</file>
+	<file>Go_b.svg</file>
+	<file>Go_cross.svg</file>
+	<file>Go_d.svg</file>
+	<file>Go_dl.svg</file>
+	<file>Go_dot.svg</file>
+	<file>Go_dr.svg</file>
+	<file>Go_l.svg</file>
+	<file>Go_r.svg</file>
+	<file>Go_u.svg</file>
+	<file>Go_ucb.svg</file>
+	<file>Go_ul.svg</file>
+	<file>Go_ur.svg</file>
+	<file>Go_w_trn.svg</file>
+	<file>Go_w.svg</file>
+</qresource>
+</RCC>
