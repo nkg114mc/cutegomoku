@@ -1,31 +1,19 @@
-Cute Chess
-==========
+Cute Gomoku
+===========
 
-[![Build Status](https://travis-ci.org/cutechess/cutechess.svg?branch=master)](https://travis-ci.org/cutechess/cutechess) [![AppVeyor Status](https://ci.appveyor.com/api/projects/status/github/cutechess/cutechess)](https://ci.appveyor.com/project/artoj/cutechess) [![Coverity Scan Build Status](https://scan.coverity.com/projects/8561/badge.svg)](https://scan.coverity.com/projects/cutechess-cutechess)
-
-Cute Chess is a graphical user interface, command-line interface and a library
-for playing chess. Cute Chess is written in C++ using the [Qt
-framework](https://www.qt.io/).
-
-Installing
-----------
-
-Binaries for both the GUI and the `cutechess-cli` command-line interface are available [here](https://github.com/cutechess/cutechess/releases)
+Cute Gomoku is a graphical user interface, command-line interface and a library
+for playing gomoku. It is a derived from project [Cute Chess](https://cutechess.com/), which is 
+originally designed for playing chess. Both Cute Gomoku and Cute Chess are
+written in C++ using the [Qt framework](https://www.qt.io/).
 
 Compiling
 ---------
 
-Cute Chess requires Qt 5.7 or greater, a compiler with C++11 support and `qmake`.
-
+Cute Gomoku requires Qt 5.7 or greater, a compiler with C++11 support and `qmake`.
 In the simplest case you only have to issue:
 
     $ qmake
     $ make
-
-If you are using the Visual C++ compiler replace `make` with `nmake`.
-
-Documentation is available as Unix manual pages in the `docs/` directory. API
-documentation can be built by issuing `make doc-api` (requires [Doxygen](http://www.doxygen.org/)).
 
 For detailed build instruction on various operating systems please visit:
 * [Making a release](https://github.com/cutechess/cutechess/wiki/Making-a-release)
@@ -33,24 +21,43 @@ For detailed build instruction on various operating systems please visit:
 Running
 -------
 
-The `cutechess-cli` program is run from the command line to play games between
-chess engines. For example to play ten games between two Sloppy engines
-(assuming `sloppy` is in PATH) with a time control of 40 moves in 60
-seconds:
+The `cutegomoku-cli` program is run from the command line to play games between
+gomoku engines. A gomoku engine is a computer program that can play gomoku by interact with
+an interface/manager program following a text protocol. So far for gomoku, 
+only Gomocup protocol is supported. See more details about Gomocup engines and 
+protocols in the [GomoCup offical site](https://gomocup.org/).
 
-    $ cutechess-cli -engine cmd=sloppy -engine cmd=sloppy -each proto=xboard tc=40/60 -rounds 10
+Assuming that you already have an engine Pela, and to play ten games between two 
+Pela engines with a time control of 40 moves in 60 seconds:
 
-See `cutechess-cli -help` for descriptions of the supported options or manuals
-for full documentation.
+    $ cutegomoku-cli -variant gomoku -boardsize 15 -engine cmd=./<path-to-engine>/pbrain-pela -engine cmd=./<path-to-engine>/pbrain-pela -each proto=gomocup tc=40/60 -rounds 10
+
+Note that there are three key differences between  `cutegomoku-cli` and `cutechess-cli`.
+First, the `-variant gomoku` is required, otherwise cutegomoku will assume that you are playing chess.
+Second, the protocol of engines should be `gomocup`.
+Third, you can specify the board size by `-boardsize <N>`, which leads to a NxN board. 
+The default gomoku board size is 15x15.
+
+For other original options from Cute Chess, please see `cutegomoku-cli -help` for 
+descriptions of the supported options or manuals for full documentation.
+
+Acknowledgements
+----------------
+
+Thanks for the all developers of Cute Chess for providing nn exellent tool for 
+the computer chess community. This project intends to expand this tool to 
+computer gomoku community so that it could benefit more computer game programmers.
+
 
 License
 -------
 
-Cute Chess is released under the GPLv3+ license except for the components in
-the `projects/lib/components` and `projects/gui/components` directories which
-are released under the MIT License.
+Following Cute Chess, Cute Gomoku is released under the GPLv3+ license except 
+for the components in the `projects/lib/components` and `projects/gui/components` 
+directories which are released under the MIT License.
 
 Credits
 -------
 
-Cute Chess was written by Ilari Pihlajisto, Arto Jonsson and [contributors](https://github.com/cutechess/cutechess/graphs/contributors)
+Cute Gomoku: Chao Ma and [contributors](https://github.com/cutechess/cutechess/graphs/contributors)
+Cute Chess: Ilari Pihlajisto, Arto Jonsson and [contributors](https://github.com/cutechess/cutechess/graphs/contributors)
