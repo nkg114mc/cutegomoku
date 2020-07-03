@@ -59,5 +59,5 @@ directories which are released under the MIT License.
 Credits
 -------
 
-Cute Gomoku: Chao Ma and [contributors](https://github.com/cutechess/cutechess/graphs/contributors)
-Cute Chess: Ilari Pihlajisto, Arto Jonsson and [contributors](https://github.com/cutechess/cutechess/graphs/contributors)
+- Cute Gomoku: Chao Ma and [contributors](https://github.com/cutechess/cutechess/graphs/contributors)
+- Cute Chess: Ilari Pihlajisto, Arto Jonsson and [contributors](https://github.com/cutechess/cutechess/graphs/contributors)
