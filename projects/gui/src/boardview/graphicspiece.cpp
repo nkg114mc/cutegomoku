@@ -20,6 +20,8 @@
 #include <QSvgRenderer>
 #include <QPainter>
 
+#include <cctype>
+
 GraphicsPiece::GraphicsPiece(const Chess::Piece& piece,
 			     qreal squareSize,
 			     const QString& elementId,
@@ -90,7 +92,7 @@ void GraphicsPiece::paint(QPainter* painter,
 	bounds.setHeight(width);
 	bounds.moveCenter(m_rect.center());
 
-	if (m_elementId.isUpper()) {
+	if (isupper(m_elementId.toStdString()[0])) {
 		painter->drawImage(bounds, wImg);
 	} else {
 		painter->drawImage(bounds, bImg);
