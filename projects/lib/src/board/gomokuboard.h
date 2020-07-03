@@ -235,6 +235,10 @@ class LIB_EXPORT GomokuBoard : public Board
 
 		void setSize(int sz);
 
+		QVector<Move> getHistoricalMoves();
+
+		Square chessSquarePublic(int index) const;
+
 	protected:
 
 		/*!

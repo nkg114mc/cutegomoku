@@ -210,6 +210,10 @@ Square GomokuBoard::chessSquare(int index) const
 	return Square(file, rank);
 }
 
+Square GomokuBoard::chessSquarePublic(int index) const {
+	return chessSquare(index);
+}
+
 // square to index
 int GomokuBoard::squareIndex(const Square& square) const
 {
@@ -1015,6 +1019,15 @@ void GomokuBoard::setSize(int sz) {
 	Q_ASSERT(sz > 0 && sz < 32);
 	setWidth(sz);
 	setHeight(sz);
+}
+
+QVector<Move> GomokuBoard::getHistoricalMoves()
+{
+	QVector<Move> histMoves;
+	for (int i = m_moveHistory.size() - 1; i >= 0; i--) {
+		histMoves << m_moveHistory[i].move;
+	}
+	return histMoves;
 }
 
 void GomokuBoard::showBoard() {

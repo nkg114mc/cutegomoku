@@ -21,18 +21,21 @@
 
 #include "chessengine.h"
 #include "board/board.h"
+#include "board/square.h"
+#include "board/piece.h"
+#include "board/move.h"
 
 /*!
- * \brief A chess engine which uses the Xboard chess engine communication protocol.
+ * \brief A gomoku engine which uses the GomoCup engine communication protocol.
  *
- * Xboard's specifications: http://www.open-aurec.com/wbforum/WinBoard/engine-intf.html
+ * GomoCup Protocol's specifications: http://petr.lastovicka.sweb.cz/protocl2en.htm
  */
 class LIB_EXPORT GomocupEngine : public ChessEngine
 {
 	Q_OBJECT
 
 	public:
-		/*! Creates a new XboardEngine. */
+		/*! Creates a new GomocupEngine. */
 		GomocupEngine(QObject* parent = nullptr);
 
 		// Inherited from ChessEngine
@@ -61,15 +64,15 @@ class LIB_EXPORT GomocupEngine : public ChessEngine
 		void initialize();
 
 	private:
-		EngineOption* parseOption(const QString& line);
-		void setFeature(const QString& name, const QString& val);
-		//void setForceMode(bool enable);
+		//EngineOption* parseOption(const QString& line);
+		//void setFeature(const QString& name, const QString& val);
+		void setForceMode(bool enable);
 		void sendTimeLeft();
 		void finishGame();
 		QString moveString(const Chess::Move& move);
 		int adaptScore(int score) const;
-		//const QString transformMove(const QString& str, int height, int shift) const;
 		void setGomokuBoard();
+		void sendTurnInfo();
 		
 		bool m_forceMode;
 		bool m_drawOnNextMove;

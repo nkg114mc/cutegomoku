@@ -66,12 +66,6 @@ GomocupEngine::GomocupEngine(QObject* parent)
 void GomocupEngine::startProtocol()
 {
 	// Tell the engine to turn on xboard mode
-	//write("xboard");
-	// Tell the engine that we're using Xboard protocol 2
-	//write("protover 2");
-
-	// Give the engine 2 seconds to reply to the protover command.
-	// This is how Xboard deals with protocol 1 engines.
 	m_initTimer->start();
 }
 
@@ -254,13 +248,18 @@ void GomocupEngine::sendTimeLeft()
 
 	write(QString("INFO time_left %1").arg(csLeft));
 }
-/*
+
+void GomocupEngine::sendTurnInfo() // other infos except time left
+{
+
+}
+
+
 void GomocupEngine::setForceMode(bool enable)
 {
 	if (enable && !m_forceMode)
 	{
 		m_forceMode = true;
-		write("force");
 
 		// If there's a move pending, and we didn't get the
 		// 'go' command, we'll send the move in force mode.
@@ -269,7 +268,7 @@ void GomocupEngine::setForceMode(bool enable)
 	}
 	m_forceMode = enable;
 }
-*/
+
 QString GomocupEngine::moveString(const Chess::Move& move)
 {
 	Q_ASSERT(!move.isNull());
@@ -297,7 +296,7 @@ void GomocupEngine::makeMove(const Chess::Move& move)
 			return;
 		}
 		else if (move != m_nextMove) {
-			//setForceMode(true);
+			setForceMode(true);
 		}
 	}
 
@@ -313,13 +312,14 @@ void GomocupEngine::makeMove(const Chess::Move& move)
 
 void GomocupEngine::startThinking()
 {
-	//setForceMode(false);
+	setForceMode(false);
 	sendTimeLeft();
 
-	if (m_nextMove.isNull())
+	if (m_nextMove.isNull()) {
 		write("BEGIN");
-	else
+	} else {
 		makeMove(m_nextMove);
+	}
 }
 
 void GomocupEngine::onTimeout()
@@ -354,8 +354,9 @@ bool GomocupEngine::sendPing()
 		return false;
 	}
 
-	//write(QString("ISREADY"));
-	write(QString("ABOUT"));
+	// There is no specific command in Gomocup to support ping, so we use ABOUT
+	// It looks a little wired though
+	write(QString("ABOUT")); 
 	return true;
 }
 
@@ -363,174 +364,42 @@ void GomocupEngine::sendQuit()
 {
 	write("END");
 }
-
+/*
 EngineOption* GomocupEngine::parseOption(const QString& line)
-{/*
-	int start = line.indexOf(" -") + 1;
-	if (start < 2)
-		return nullptr;
-
-	QString name(line.left(start - 1));
-
-	start++;
-	int end = line.indexOf(' ', start);
-	if (end == -1)
-		end = line.length();
-	QString type(line.mid(start, end - start));
-
-	if (type == "button" || type == "save")
-		return new EngineButtonOption(name);
-	if (type == "check")
-	{
-		bool value = line.mid(end + 1) == "1";
-		return new EngineCheckOption(name, value, value);
-	}
-	if (type == "string" || type == "file" || type == "path")
-	{
-		QString value(line.mid(end + 1));
-		EngineTextOption::EditorType editorType;
-
-		if (type == "file")
-			editorType = EngineTextOption::FileDialog;
-		else if (type == "path")
-			editorType = EngineTextOption::FolderDialog;
-		else
-			editorType = EngineTextOption::LineEdit;
-
-		return new EngineTextOption(name, value, value, QString(), editorType);
-	}
-	if (type == "spin" || type == "slider")
-	{
-		QStringList params(line.mid(end + 1).split(' ', QString::SkipEmptyParts));
-		if (params.size() != 3)
-			return nullptr;
-
-		bool ok = false;
-		int value = params.at(0).toInt(&ok);
-		if (!ok)
-			return nullptr;
-
-		int min = params.at(1).toInt(&ok);
-		if (!ok || min > value)
-			return nullptr;
-
-		int max = params.at(2).toInt(&ok);
-		if (!ok || max < value)
-			return nullptr;
-
-		return new EngineSpinOption(name, value, value, min, max);
-	}
-	if (type == "combo")
-	{
-		QStringList choices = line.mid(end + 1).split(" /// ", QString::SkipEmptyParts);
-		if (choices.isEmpty())
-			return nullptr;
-
-		QString value;
-		QStringList::iterator it;
-		for (it = choices.begin(); it != choices.end(); ++it)
-		{
-			if (it->startsWith('*'))
-			{
-				it->remove(0, 1);
-				value = *it;
-			}
-		}
-		if (value.isEmpty())
-			value = choices.first();
-
-		return new EngineComboOption(name, value, value, choices);
-	}
-*/
+{
 	return nullptr;
 }
 
 void GomocupEngine::setFeature(const QString& name, const QString& val)
-{/*
-	if (name == "ping")
-		m_ftPing = (val == "1");
-	else if (name == "setboard")
-		m_ftSetboard = (val == "1");
-	else if (name == "san")
-	{
-		if (val == "1")
-			m_notation = Chess::Board::StandardAlgebraic;
-		else
-			m_notation = Chess::Board::LongAlgebraic;
-	}
-	else if (name == "usermove")
-		m_ftUsermove = (val == "1");
-	else if (name == "nps")
-		m_ftNps = (val == "1");
-	else if (name == "time")
-		m_ftTime = (val == "1");
-	else if (name == "reuse")
-		m_ftReuse = (val == "1");
-	else if (name == "myname")
-	{
-		if (this->name() == "XboardEngine")
-			setName(val);
-	}
-	else if (name == "variants")
-	{
-		clearVariants();
-		const auto variants = val.split(',');
-		for (const QString& str : variants)
-		{
-			QString variant = variantFromXboard(str.trimmed());
-			if (!variant.isEmpty())
-				addVariant(variant);
-		}
-	}
-	else if (name == "name")
-		m_ftName = (val == "1");
-	else if (name == "memory")
-	{
-		if (val == "1")
-			addOption(new EngineSpinOption("memory", 32, 32, 0, INT_MAX - 1));
-	}
-	else if (name == "smp")
-	{
-		if (val == "1")
-			addOption(new EngineSpinOption("cores", 1, 1, 0, INT_MAX - 1));
-	}
-	else if (name == "egt")
-	{
-		const auto list = val.split(',');
-		for (const QString& str : list)
-		{
-			QString egtType = QString("egtpath %1").arg(str.trimmed());
-			addOption(new EngineTextOption(egtType, QString(), QString()));
-		}
-	}
-	else if (name == "option")
-	{
-		EngineOption* option = parseOption(val);
-		if (option == nullptr || !option->isValid())
-			qWarning() << "Invalid Xboard option from" << this->name()
-				   << ":" << val;
-		else
-			addOption(option);
-	}
-	else if (name == "done")
-	{
-		write("accepted done", Unbuffered);
-		m_initTimer->stop();
-		
-		if (val == "1")
-			initialize();
-		return;
-	}
-	else
-	{
-		write("rejected " + name, Unbuffered);
-		return;
-	}
-	
-	write("accepted " + name, Unbuffered);*/
+{
 }
+*/
 
 void GomocupEngine::setGomokuBoard() {
+
+	setForceMode(true);
+	write("BOARD");
+
+	QVector<Chess::Move> moves = board()->getHistoricalMoves();
+	for (int i = 0; i < moves.size(); i++) {
+		
+		Chess::Move mv = moves[i];
+		Chess::Square sq = board()->chessSquarePublic(mv.targetSquare());
+		Chess::Piece pc = board()->pieceAt(sq);
+		
+		int pieceInt = 0;
+		if (pc.side() == Chess::Side::White) {
+			pieceInt = 2;
+		} else if (pc.side() == Chess::Side::Black) {
+			pieceInt = 1;
+		}
+
+		// set move
+		write(QString("%1,%2,%3").arg(sq.file()).arg(sq.rank()).arg(pieceInt));
+	}
+
+	write("DONE");
+	setForceMode(false);
 
 }
 
@@ -558,192 +427,6 @@ int GomocupEngine::adaptScore(int score) const
 	return score;
 }
 
-/*
-void GomocupEngine::parseLine(const QString& line)
-{
-	const QStringRef command(firstToken(line));
-	if (command.isEmpty())
-		return;
-
-	if (command == "1-0" || command == "0-1"
-	||  command == "*" || command == "1/2-1/2" || command == "resign")
-	{
-		if ((state() != Thinking && state() != Observing)
-		||  !board()->result().isNone())
-		{
-			finishGame();
-			return;
-		}
-
-		QString description(nextToken(command, true).toString());
-		if (description.startsWith('{'))
-			description.remove(0, 1);
-		if (description.endsWith('}'))
-			description.chop(1);
-
-		if (command == "*")
-			claimResult(Chess::Result(Chess::Result::NoResult,
-						  Chess::Side::NoSide,
-						  description));
-		else if (command == "1/2-1/2")
-		{
-			if (state() == Thinking && areClaimsValidated())
-				// The engine claims that its next move will draw the game
-				m_drawOnNextMove = true;
-			else
-				claimResult(Chess::Result(Chess::Result::Draw,
-							  Chess::Side::NoSide,
-							  description));
-		}
-		else if ((command == "1-0" && side() == Chess::Side::White)
-		     ||  (command == "0-1" && side() == Chess::Side::Black))
-			claimResult(Chess::Result(Chess::Result::Win,
-						  side(),
-						  description));
-		else
-			forfeit(Chess::Result::Resignation);
-
-		return;
-	}
-	else if (command.at(0).isDigit()
-	     && !command.contains("."))	// principal variation
-	{
-		bool ok = false;
-		int val = 0;
-		QStringRef ref(command);
-		
-		// Search depth
-		QString depth(ref.toString());
-		if (!(depth.cend() - 1)->isDigit())
-			depth.chop(1);
-		m_eval.setDepth(depth.toInt());
-
-		// Evaluation
-		if ((ref = nextToken(ref)).isNull())
-			return;
-		val = ref.toString().toInt(&ok);
-		if (ok)
-		{
-			if (whiteEvalPov() && side() == Chess::Side::Black)
-				val = -val;
-			m_eval.setScore(adaptScore(val));
-		}
-
-		// Search time
-		if ((ref = nextToken(ref)).isNull())
-			return;
-		val = ref.toString().toInt(&ok);
-		if (ok)
-			m_eval.setTime(val * 10);
-
-		// Node count
-		if ((ref = nextToken(ref)).isNull())
-			return;
-		val = ref.toString().toULongLong(&ok);
-		if (ok)
-			m_eval.setNodeCount(val);
-
-		// Principal variation
-		if ((ref = nextToken(ref, true)).isNull())
-			return;
-		m_eval.setPv(ref.toString());
-
-		emit thinking(m_eval);
-
-		return;
-	}
-
-	// move format of old CECP engines: 1. ... e2e4
-	bool testDigitAndDot = command.at(0).isDigit() && command.contains(".");
-
-	const QString args(nextToken(command, true).toString());
-	if (command == "move" || (testDigitAndDot && args.startsWith("...")))
-	{
-		if (state() != Thinking)
-		{
-			if (state() == FinishingGame)
-				finishGame();
-			else
-				qWarning("Unexpected move from %s",
-					 qUtf8Printable(name()));
-			return;
-		}
-
-		// remove "..." of old format if necessary
-		int mark = (args.indexOf("..."));
-		const QString& movestr = mark < 0 ? args : args.mid(4);
-		const QString& newMovestr = transformMove(movestr, board()->height(), +1);
-
-		Chess::Move move = board()->moveFromString(newMovestr);
-		if (move.isNull())
-		{
-			forfeit(Chess::Result::IllegalMove, newMovestr);
-			return;
-		}
-
-		if (m_drawOnNextMove)
-		{
-			m_drawOnNextMove = false;
-			Chess::Result boardResult;
-			board()->makeMove(move);
-			boardResult = board()->result();
-			board()->undoMove();
-
-			// If the engine claimed a draw before this move, the
-			// game must have ended in a draw by now
-			if (!boardResult.isDraw())
-			{
-				claimResult(Chess::Result(Chess::Result::Draw));
-				return;
-			}
-		}
-
-		emitMove(move);
-	}
-	else if (command == "pong")
-	{
-		if (args.toInt() == m_lastPing)
-			pong();
-	}
-	else if (command == "feature")
-	{
-		QRegExp rx("\\w+\\s*=\\s*(\"[^\"]*\"|\\d+)");
-		
-		int pos = 0;
-		
-		while ((pos = rx.indexIn(args, pos)) != -1)
-		{
-			QString cap = rx.cap();
-			int index = cap.indexOf('=');
-			if (index != -1)
-			{
-				QString feature = cap.left(index).trimmed();
-				QString val = cap.mid(index + 1).trimmed();
-				val.remove('\"');
-
-				setFeature(feature, val);
-			}
-
-			pos += rx.matchedLength();
-		}
-	}
-	else if (command.startsWith("Illegal"))
-	{
-		forfeit(Chess::Result::Adjudication,
-			tr("%1 claims illegal %2")
-			.arg(this->side().toString())
-			.arg(args));
-	}
-	else if (command == "ERROR")
-	{
-		// If the engine complains about an unknown result command,
-		// we can assume that it's safe to finish the game.
-		QString str = args.section(':', 1).trimmed();
-		if (str.startsWith("result"))
-			finishGame();
-	}
-}
-*/
 void GomocupEngine::parseLine(const QString& line)
 {
 	const QStringRef command(firstToken(line));
@@ -771,24 +454,7 @@ void GomocupEngine::parseLine(const QString& line)
 			forfeit(Chess::Result::IllegalMove, movestr);
 			return;
 		}
-/*
-		if (m_drawOnNextMove)
-		{
-			m_drawOnNextMove = false;
-			Chess::Result boardResult;
-			board()->makeMove(move);
-			boardResult = board()->result();
-			board()->undoMove();
 
-			// If the engine claimed a draw before this move, the
-			// game must have ended in a draw by now
-			if (!boardResult.isDraw())
-			{
-				claimResult(Chess::Result(Chess::Result::Draw));
-				return;
-			}
-		}
-*/
 		emitMove(move);
 	}
 	else if (command.contains("=")) // response to ABOUT
@@ -804,42 +470,12 @@ void GomocupEngine::parseLine(const QString& line)
 
 		pong();
 	}
-	else if (command == "READYOK")
-	{
-		pong();
-	}
 	else if (command == "OK")
 	{
 		pong();
-	}/*
-	else if (command == "feature")
-	{
-		QRegExp rx("\\w+\\s*=\\s*(\"[^\"]*\"|\\d+)");
-		
-		int pos = 0;
-		
-		while ((pos = rx.indexIn(args, pos)) != -1)
-		{
-			QString cap = rx.cap();
-			int index = cap.indexOf('=');
-			if (index != -1)
-			{
-				QString feature = cap.left(index).trimmed();
-				QString val = cap.mid(index + 1).trimmed();
-				val.remove('\"');
-
-				setFeature(feature, val);
-			}
-
-			pos += rx.matchedLength();
-		}
-	}*/
+	}
 	else if (command.startsWith("MESSAGE"))
-	{/*
-		forfeit(Chess::Result::Adjudication,
-			tr("%1 claims illegal %2")
-			.arg(this->side().toString())
-			.arg(args));*/
+	{
 		QStringRef ref(command);
 		
 		std::cout << "GetMessage[";
@@ -850,13 +486,9 @@ void GomocupEngine::parseLine(const QString& line)
 		std::cout << "]" << std::endl;
 	}
 	else if (command.startsWith("DEBUG"))
-	{/*
-		forfeit(Chess::Result::Adjudication,
-			tr("%1 claims illegal %2")
-			.arg(this->side().toString())
-			.arg(args));*/
+	{
 		QStringRef ref(command);
-		
+
 		std::cout << "GetDebug[";
 		while (!ref.isNull()) {
 			std::cout << ref.toString().toStdString();
@@ -865,13 +497,7 @@ void GomocupEngine::parseLine(const QString& line)
 		std::cout << "]" << std::endl;
 	}
 	else if (command == "ERROR")
-	{/*
-		// If the engine complains about an unknown result command,
-		// we can assume that it's safe to finish the game.
-		QString str = args.section(':', 1).trimmed();
-		if (str.startsWith("result"))
-			finishGame();*/
-
+	{
 		QStringRef ref(command);
 		
 		std::cout << "GetError[";
@@ -880,16 +506,9 @@ void GomocupEngine::parseLine(const QString& line)
 			ref = nextToken(ref);
 		}
 		std::cout << "]" << std::endl;
-
 	}
 	else if (command == "UNKNOWN")
-	{/*
-		// If the engine complains about an unknown result command,
-		// we can assume that it's safe to finish the game.
-		QString str = args.section(':', 1).trimmed();
-		if (str.startsWith("result"))
-			finishGame();*/
-
+	{
 		QStringRef ref(command);
 		
 		std::cout << "GetUnknown[";
@@ -898,27 +517,11 @@ void GomocupEngine::parseLine(const QString& line)
 			ref = nextToken(ref);
 		}
 		std::cout << "]" << std::endl;
-
 	}
 
 }
 
 void GomocupEngine::sendOption(const QString& name, const QVariant& value)
-{/*
-	if (name == "memory" || name == "cores" || name.startsWith("egtpath "))
-		write(name + " " + value.toString());
-	else
-	{
-		if (value.isNull())
-			write("option " + name);
-		else
-		{
-			QString tmp;
-			if (value.type() == QVariant::Bool)
-				tmp = value.toBool() ? "1" : "0";
-			else
-				tmp = value.toString();
-			write("option " + name + "=" + tmp);
-		}
-	}*/
+{
+	// TODO?
 }

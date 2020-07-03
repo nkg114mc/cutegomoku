@@ -262,6 +262,10 @@ class LIB_EXPORT ChessBoard : public Board
 
 		void setSize(int sz);
 
+		QVector<Move> getHistoricalMoves();
+
+		Square chessSquarePublic(int index) const;
+
 	protected:
 		/*!
 		 * Initializes the variant.

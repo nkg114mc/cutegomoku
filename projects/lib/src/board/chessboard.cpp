@@ -252,6 +252,10 @@ Square ChessBoard::chessSquare(int index) const
 	return Square(file, rank);
 }
 
+Square ChessBoard::chessSquarePublic(int index) const {
+	return chessSquare(index);
+}
+
 int ChessBoard::squareIndex(const Square& square) const
 {
 	if (!isValidSquare(square))
@@ -989,6 +993,15 @@ void ChessBoard::setHeight(int ht) {
 void ChessBoard::setSize(int sz) {
 	setWidth(sz);
 	setHeight(sz);
+}
+
+QVector<Move> ChessBoard::getHistoricalMoves()
+{
+	QVector<Move> histMoves;
+	for (int i = m_moveHistory.size() - 1; i >= 0; i--) {
+		histMoves << m_moveHistory[i].move;
+	}
+	return histMoves;
 }
 
 } // namespace Chess

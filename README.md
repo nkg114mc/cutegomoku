@@ -44,7 +44,7 @@ descriptions of the supported options or manuals for full documentation.
 Acknowledgements
 ----------------
 
-Thanks for the all developers of Cute Chess for providing nn exellent tool for 
+Thanks for the all developers of Cute Chess for providing an exellent tool for 
 the computer chess community. This project intends to expand this tool to 
 computer gomoku community so that it could benefit more computer game programmers.
 

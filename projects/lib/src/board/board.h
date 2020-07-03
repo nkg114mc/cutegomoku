@@ -201,6 +201,8 @@ class LIB_EXPORT Board
 		virtual Side startingSide() const = 0;
 		/*! Returns the piece at \a square. */
 		virtual Piece pieceAt(const Square& square) const = 0;
+		/*! Returns the square at \a index. This is the public wrapper of chessSquare() */
+		virtual Square chessSquarePublic(int index) const = 0;
 		/*! Returns the number of halfmoves (plies) played. */
 		virtual int plyCount() const = 0;
 		/*!
@@ -303,6 +305,8 @@ class LIB_EXPORT Board
 		virtual void setHeight(int ht) = 0;
 
 		virtual void setSize(int sz) = 0;
+
+		virtual QVector<Move> getHistoricalMoves() = 0;
 
 	protected:
 		/*!
