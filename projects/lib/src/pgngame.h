@@ -158,6 +158,8 @@ class LIB_EXPORT PgnGame
 		/*! Returns the starting position's FEN string. */
 		QString startingFenString() const;
 
+		int boardSize() const;
+
 		/*!
 		 * Sets \a tag's value to \a value.
 		 * If \a tag doesn't exist, a new tag is created.
@@ -181,6 +183,8 @@ class LIB_EXPORT PgnGame
 		void setStartingSide(Chess::Side side);
 		/*! Sets the starting position's FEN string. */
 		void setStartingFenString(Chess::Side side, const QString& fen);
+
+		void setBoardSize(int size);
 		/*!
 		 * Sets a description for the result.
 		 *
@@ -216,6 +220,7 @@ class LIB_EXPORT PgnGame
 		QString m_initialComment;
 		static QString timeStamp(const QDateTime& dateTime);
 		QDateTime m_gameStartTime;
+		int m_boardSize;
 };
 
 /*! Reads a PGN game from a PGN stream. */

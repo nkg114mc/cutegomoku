@@ -22,6 +22,7 @@
 #include <QToolButton>
 #include <QSlider>
 #include <QMessageBox>
+#include <board/board.h>
 #include <pgngame.h>
 #include <chessgame.h>
 #include <chessplayer.h>
@@ -143,7 +144,22 @@ void GameViewer::setGame(ChessGame* game)
 {
 	Q_ASSERT(game != nullptr);
 
+	// works only for gomoku
+	// this setup allows the boardScene to get the new size when re-drawing
+	// the board (otherwise its size will remain no change, because pgn game
+	// does not contain board size, so it will miss this info, and re-construct
+	// the board with the default size).
+	int boardSize = game->board()->width();
+	game->pgn()->setBoardSize(boardSize);
+	
 	setGame(game->pgn());
+
+	//if (game->board() != nullptr) {
+	//	QMessageBox::critical(
+	//		this, tr("board size"),
+	//		tr(QString("board size = %1").arg(game->board()->width()).toStdString().c_str()));
+	//}
+
 	m_game = game;
 
 	connect(m_game, SIGNAL(fenChanged(QString)),

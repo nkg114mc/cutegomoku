@@ -302,7 +302,8 @@ void GraphicsBoard::paintGomoku(QPainter* painter,
 		{
 			rect = QRectF(left, m_rect.top() + (m_squareSize * i),
 			              m_coordSize, m_squareSize);
-			int rank = m_flipped ? (m_ranks - i) : (i + 1);
+			//int rank = m_flipped ? (m_ranks - i) : (i + 1);
+			int rank = m_flipped ? i + 1 : m_ranks - i;
 			const auto num = QString::number(rank);
 			painter->drawText(rect, Qt::AlignCenter, num);
 		}

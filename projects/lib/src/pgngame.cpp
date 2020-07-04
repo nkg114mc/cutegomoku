@@ -144,6 +144,9 @@ Chess::Board* PgnGame::createBoard() const
 		return nullptr;
 	}
 
+	// set board size for gomoku
+	board->setSize(boardSize());
+
 	return board;
 }
 
@@ -581,4 +584,12 @@ QMap< int, int > PgnGame::extractScores() const
 		scores[count] = score;
 	}
 	return scores;
+}
+
+int PgnGame::boardSize() const {
+	return m_boardSize;
+}
+
+void PgnGame::setBoardSize(int size) {
+	m_boardSize = size;
 }

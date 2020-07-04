@@ -183,6 +183,11 @@ int GameSettingsWidget::openingSuiteDepth() const
 	return ui->m_openingSuiteDepthSpin->value();
 }
 
+int GameSettingsWidget::gomokuBoardSize() const
+{
+	return ui->m_boardSizeSpinBox->value();
+}
+
 OpeningBook* GameSettingsWidget::openingBook() const
 {
 	QString file = ui->m_polyglotFileEdit->text();

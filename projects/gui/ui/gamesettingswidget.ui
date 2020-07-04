@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>426</width>
-    <height>637</height>
+    <height>753</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -549,6 +549,45 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="m_boardSizeGroupBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>Board size</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <item>
+       <widget class="QLabel" name="m_boardSizeLabel">
+        <property name="text">
+         <string>Gomoku board size:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="m_boardSizeSpinBox">
+        <property name="minimum">
+         <number>5</number>
+        </property>
+        <property name="maximum">
+         <number>25</number>
+        </property>
+        <property name="value">
+         <number>15</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="m_boardSizePlaceHolder">
+        <property name="text">
+         <string> </string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <widget class="QCheckBox" name="m_tbCheck">

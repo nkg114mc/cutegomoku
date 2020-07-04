@@ -47,6 +47,7 @@ class GameSettingsWidget : public QWidget
 		GameAdjudicator adjudicator() const;
 		OpeningSuite* openingSuite() const;
 		int openingSuiteDepth() const;
+		int gomokuBoardSize() const;
 		OpeningBook* openingBook() const;
 		int bookDepth() const;
 		bool isValid() const;

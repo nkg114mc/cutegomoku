@@ -108,6 +108,11 @@ ChessGame* NewGameDialog::createGame() const
 	bool ok = true;
 	const QString variant = ui->m_gameSettings->chessVariant();
 	auto board = Chess::BoardFactory::create(variant);
+
+	// setting board size is only valid for gomoku game
+	// chess board will ignore this setting
+	board->setSize(ui->m_gameSettings->gomokuBoardSize());
+
 	auto pgn = new PgnGame();
 	pgn->setSite(QSettings().value("pgn/site").toString());
 	auto game = new ChessGame(board, pgn);
