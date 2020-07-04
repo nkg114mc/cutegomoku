@@ -54,6 +54,7 @@ class TargetHighlights : public QGraphicsObject
 GraphicsBoard::GraphicsBoard(int files,
 			     int ranks,
 			     qreal squareSize,
+					 QString variant,
 			     QGraphicsItem* parent)
 	: QGraphicsItem(parent),
 	  m_files(files),
@@ -64,7 +65,8 @@ GraphicsBoard::GraphicsBoard(int files,
 	  m_darkColor(QColor(0xd1, 0x8b, 0x47)),
 	  m_squares(files * ranks),
 	  m_highlightAnim(nullptr),
-	  m_flipped(false)
+	  m_flipped(false),
+		m_variant(variant)
 {
 	Q_ASSERT(files > 0);
 	Q_ASSERT(ranks > 0);
@@ -97,11 +99,11 @@ void GraphicsBoard::paint(QPainter* painter,
 			  	const QStyleOptionGraphicsItem* option,
 			  	QWidget* widget)
 {
-	//if (m_board->variant() == "gomoku") {
+	if (m_variant == "gomoku") {
 		paintGomoku(painter, option, widget);
-	//} else {
-	//	paintChess(painter, option, widget);
-	//}
+	} else {
+		paintChess(painter, option, widget);
+	}
 }
 
 void GraphicsBoard::paintChess(QPainter* painter,

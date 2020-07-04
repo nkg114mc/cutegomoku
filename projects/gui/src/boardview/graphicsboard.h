@@ -51,6 +51,7 @@ class GraphicsBoard : public QGraphicsItem
 		explicit GraphicsBoard(int files,
 				       int ranks,
 				       qreal squareSize,
+							 QString variant,
 				       QGraphicsItem* parent = nullptr);
 		/*! Destroys the GraphicsBoard object. */
 		virtual ~GraphicsBoard();
@@ -154,6 +155,7 @@ class GraphicsBoard : public QGraphicsItem
 		QVector<GraphicsPiece*> m_squares;
 		QPropertyAnimation* m_highlightAnim;
 		bool m_flipped;
+		QString m_variant;
 };
 
 #endif // GRAPHICSBOARD_H

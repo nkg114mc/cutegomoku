@@ -46,8 +46,7 @@ BoardScene::BoardScene(QObject* parent)
 	  m_reserve(nullptr),
 	  m_chooser(nullptr),
 	  m_anim(nullptr),
-	  //m_renderer(new QSvgRenderer(QString(":/default.svg"), this)),
-		m_renderer(new QSvgRenderer(QString(":/stones.svg"), this)),
+	  m_renderer(new QSvgRenderer(QString(":/default.svg"), this)),
 	  m_highlightPiece(nullptr),
 	  m_moveArrows(nullptr)
 {
@@ -97,7 +96,8 @@ void BoardScene::populate()
 
 	m_squares = new GraphicsBoard(m_board->width(),
 				      m_board->height(),
-				      s_squareSize);
+				      s_squareSize,
+							m_board->variant());
 	addItem(m_squares);
 
 	if (m_board->variantHasDrops())
@@ -425,7 +425,8 @@ GraphicsPiece* BoardScene::createPiece(const Chess::Piece& piece)
 	return new GraphicsPiece(piece,
 				 s_squareSize,
 				 m_board->representation(piece),
-				 m_renderer);
+				 m_renderer,
+				 m_board->variant());
 }
 
 QPropertyAnimation* BoardScene::pieceAnimation(GraphicsPiece* piece,

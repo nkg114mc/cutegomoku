@@ -26,6 +26,7 @@ GraphicsPiece::GraphicsPiece(const Chess::Piece& piece,
 			     qreal squareSize,
 			     const QString& elementId,
 			     QSvgRenderer* renderer,
+					 QString variant,
 			     QGraphicsItem* parent)
 	: QGraphicsObject(parent),
 	  m_piece(piece),
@@ -33,7 +34,8 @@ GraphicsPiece::GraphicsPiece(const Chess::Piece& piece,
 		  squareSize, squareSize),
 	  m_elementId(elementId),
 	  m_renderer(renderer),
-	  m_container(nullptr)
+	  m_container(nullptr),
+		m_variant(variant)
 {
 	setAcceptedMouseButtons(Qt::LeftButton);
 	setCacheMode(DeviceCoordinateCache);
@@ -48,8 +50,20 @@ QRectF GraphicsPiece::boundingRect() const
 {
 	return m_rect;
 }
-/*
+
 void GraphicsPiece::paint(QPainter* painter,
+			  	const QStyleOptionGraphicsItem* option,
+			  	QWidget* widget)
+{
+	if (m_variant == "gomoku") {
+		paintGomoku(painter, option, widget);
+	} else {
+		paintChess(painter, option, widget);
+	}
+}
+
+
+void GraphicsPiece::paintChess(QPainter* painter,
 			  const QStyleOptionGraphicsItem* option,
 			  QWidget* widget)
 {
@@ -74,9 +88,8 @@ void GraphicsPiece::paint(QPainter* painter,
 
 	m_renderer->render(painter, m_elementId, bounds);
 }
-*/
 
-void GraphicsPiece::paint(QPainter* painter,
+void GraphicsPiece::paintGomoku(QPainter* painter,
 			  const QStyleOptionGraphicsItem* option,
 			  QWidget* widget)
 {

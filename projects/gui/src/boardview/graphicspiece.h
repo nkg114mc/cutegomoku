@@ -54,12 +54,19 @@ class GraphicsPiece : public QGraphicsObject
 			      qreal squareSize,
 			      const QString& elementId,
 			      QSvgRenderer* renderer,
+						QString variant,
 			      QGraphicsItem* parent = nullptr);
 
 		// Inherited from QGraphicsObject
 		virtual int type() const;
 		virtual QRectF boundingRect() const;
 		virtual void paint(QPainter* painter,
+				   const QStyleOptionGraphicsItem* option,
+				   QWidget* widget = nullptr);
+		virtual void paintChess(QPainter* painter,
+				   const QStyleOptionGraphicsItem* option,
+				   QWidget* widget = nullptr);
+		virtual void paintGomoku(QPainter* painter,
 				   const QStyleOptionGraphicsItem* option,
 				   QWidget* widget = nullptr);
 
@@ -93,6 +100,7 @@ class GraphicsPiece : public QGraphicsObject
 		QString m_elementId;
 		QSvgRenderer* m_renderer;
 		QGraphicsItem* m_container;
+		QString m_variant;
 };
 
 #endif // GRAPHICSPIECE_H
